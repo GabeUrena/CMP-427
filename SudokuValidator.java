@@ -1,3 +1,7 @@
+// This program is designed to take the 9x9 sudoku puzzle solution in the main method
+// and tell you if the solution is valid. Each check is performed using a thread, 
+// implemented using the runnable class.
+
 import java.util.Arrays;
 
 public class SudokuValidator implements Runnable{
