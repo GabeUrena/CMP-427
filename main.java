@@ -73,30 +73,34 @@ public class main {
 			burstTime.add(burstTimeArr[i]);
 		}
 		
-	
 // ******************* FCFS CALCULATIONS ********************
 // Arraylists to store each calculation
 		ArrayList<Integer> fcfsTurnaroundTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsWaitTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsResponseTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsCompletionTime = new ArrayList<Integer>();
-		ArrayList<Integer> fcfsProcessStart = new ArrayList<Integer>();
 
-
-
-
+		
+		// Response Time
+				double avgFCFSResponseTime=0;
+				fcfsResponseTime.add(arrivalTime.get(0));
+				for(int i=1;i<numOfProcesses; i++) {
+					//if processs starts after wait time
+					if(i!=0 && arrivalTime.get(i)>(fcfsResponseTime.get(i-1)+burstTime.get(i-1))){
+						fcfsResponseTime.add(arrivalTime.get(i));
+					}else {
+				fcfsResponseTime.add(fcfsResponseTime.get(i-1)+burstTime.get(i-1));
+				}
+					avgFCFSResponseTime += fcfsResponseTime.get(i);
+				}	
+				avgFCFSResponseTime = avgFCFSResponseTime/numOfProcesses;
+				
+				
 // Completion time
 		
-		for(int i=0;i<numOfProcesses; i++) {
-		if(i==0) {
-			fcfsCompletionTime.add(burstTime.get(i));
-		}else if(arrivalTime.get(i)>fcfsCompletionTime.get(i-1)){
-			fcfsCompletionTime.add(arrivalTime.get(i)+burstTime.get(i));
-		}else{
-			fcfsCompletionTime.add(burstTime.get(i)+fcfsCompletionTime.get(i-1));
-		}
-		}
-		
+				for(int i=0;i<numOfProcesses; i++) {
+					fcfsCompletionTime.add(fcfsResponseTime.get(i)+burstTime.get(i));
+					}
 // TurnAround time
 		double avgFCFSTurnaroundTime=0;
 		for(int i=0;i<numOfProcesses; i++) {
@@ -108,33 +112,18 @@ public class main {
 // Wait time
 		double avgFCFSWaitTime=0;
 		for(int i=0;i<numOfProcesses; i++) {
-			if(i==0) {
-				fcfsWaitTime.add(0);
-			}else {
-			fcfsWaitTime.add(fcfsCompletionTime.get(i-1)-arrivalTime.get(i));
-		}
+		fcfsWaitTime.add(fcfsResponseTime.get(i)-arrivalTime.get(i));
 			avgFCFSWaitTime += fcfsWaitTime.get(i);
 		}
 		avgFCFSWaitTime = avgFCFSWaitTime/numOfProcesses;
 		
-// Response Time
-		double avgFCFSResponseTime=0;
-		for(int i=0;i<numOfProcesses; i++) {
-		fcfsResponseTime.add(fcfsWaitTime.get(i));
-		avgFCFSResponseTime += fcfsResponseTime.get(i);
-		}
-		avgFCFSResponseTime = avgFCFSResponseTime/numOfProcesses;
-		
-// getting the start of process
-		for(int i=0;i<numOfProcesses; i++) {
-			if(i==0) {
-				fcfsProcessStart.add(arrivalTime.get(i));
-			}else
-		fcfsProcessStart.add(fcfsCompletionTime.get(i)-burstTime.get(i));
-		
-		}
 
+	
+
+// ******************* Round Robin Calculation ***************************
 		
+		// to measure how much of the process is left to run incroment down based on the burst time
+		//Ask user quantum time
 		
 System.out.println("-------------------------------------------------");
 System.out.println("            CPU Scheduling Simulation");
@@ -145,16 +134,19 @@ System.out.println("       First Come First Served Scheduling");
 System.out.println("-------------------------------------------------");	
 		
 // Gantt Graph
+
 for(int i = 0; i<numOfProcesses;i++){
-	if(i<1 && fcfsProcessStart.get(i)>0) {
-		System.out.println("[0-"+fcfsProcessStart.get(i)+"] idle");
+	
+	if(i==0 && fcfsResponseTime.get(i)>0) {
+		System.out.println("[0-"+fcfsResponseTime.get(i)+"] idle");
 	}
-	else if(fcfsProcessStart.get(i)>fcfsCompletionTime.get(i-1)) {
-		System.out.println("["+fcfsCompletionTime.get(i-1) +"-"+fcfsProcessStart.get(i)+"] idle");
+	else if(i>0&&fcfsResponseTime.get(i)>fcfsCompletionTime.get(i-1)) {
+		System.out.println("["+fcfsCompletionTime.get(i-1) +"-"+fcfsResponseTime.get(i)+"] idle");
 	}
-	System.out.println("["+fcfsProcessStart.get(i)+"-"+fcfsCompletionTime.get(i)+"] "+processID.get(i)+" running");
+	System.out.println("["+fcfsResponseTime.get(i)+"-"+fcfsCompletionTime.get(i)+"] "+processID.get(i)+" running");
 
 }
+
 // Printing Turnaround Times
 System.out.println("");
 System.out.println("Turnaround times:");
@@ -179,8 +171,11 @@ System.out.println("Average turnaround time: "+avgFCFSTurnaroundTime);
 System.out.println("Average wait time: "+avgFCFSWaitTime);
 System.out.println("Average response time: "+avgFCFSResponseTime);
 
-
-
+System.out.println("");
+System.out.println("");
+System.out.println("-------------------------------------------------");
+System.out.println("                  Round Robin");
+System.out.println("-------------------------------------------------");
 
 		/*
 		 * 
@@ -193,7 +188,7 @@ System.out.println("Average response time: "+avgFCFSResponseTime);
 		 * order to select appropriate tasks from the ready queue. When a task is chosen to 
 		 * run, the simulator prints out a message indicating what process ID is chosen to
 		 * execute for this time slot. If no task is running (i.e. empty ready queue), it 
-		 * prints out an ìidleî message. Before advancing to the next time unit, the 
+		 * prints out an ‚Äúidle‚Äù message. Before advancing to the next time unit, the 
 		 * simulator should update all necessary changes in task and ready queue status.
 		
 		The program is run as follows:
@@ -202,9 +197,5 @@ System.out.println("Average response time: "+avgFCFSResponseTime);
 
 		 */
 		
-		
-		
 	}
-	
-	
 }
