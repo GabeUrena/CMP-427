@@ -11,7 +11,7 @@ public class main {
 		
 		try {
 // File location
-			File txtFile = new File("C:\\Users\\puffy\\OneDrive\\Desktop\\cmp426file.txt");
+			File txtFile = new File("C:\\Users\\puffy\\Desktop\\cmp426file.txt");
 // Open file
 			Scanner myReader = new Scanner(txtFile);
 				while(myReader.hasNext()) {
@@ -73,19 +73,20 @@ public class main {
 			burstTime.add(burstTimeArr[i]);
 		}
 		
-// ******************* FCFS CALCULATIONS ********************
+// ******************* FCFS CALCULATIONS **********************************************************
 // Arraylists to store each calculation
 		ArrayList<Integer> fcfsTurnaroundTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsWaitTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsResponseTime = new ArrayList<Integer>();
 		ArrayList<Integer> fcfsCompletionTime = new ArrayList<Integer>();
-
-		
+		double avgFCFSResponseTime=0;
+		double avgFCFSTurnaroundTime=0;
+		double avgFCFSWaitTime=0;
 		// Response Time
-				double avgFCFSResponseTime=0;
+				
 				fcfsResponseTime.add(arrivalTime.get(0));
 				for(int i=1;i<numOfProcesses; i++) {
-					//if processs starts after wait time
+					//if process starts after wait time
 					if(i!=0 && arrivalTime.get(i)>(fcfsResponseTime.get(i-1)+burstTime.get(i-1))){
 						fcfsResponseTime.add(arrivalTime.get(i));
 					}else {
@@ -102,7 +103,7 @@ public class main {
 					fcfsCompletionTime.add(fcfsResponseTime.get(i)+burstTime.get(i));
 					}
 // TurnAround time
-		double avgFCFSTurnaroundTime=0;
+		
 		for(int i=0;i<numOfProcesses; i++) {
 			fcfsTurnaroundTime.add(fcfsCompletionTime.get(i)-arrivalTime.get(i));
 			avgFCFSTurnaroundTime += fcfsTurnaroundTime.get(i);
@@ -110,7 +111,7 @@ public class main {
 		avgFCFSTurnaroundTime = avgFCFSTurnaroundTime/numOfProcesses;
 		
 // Wait time
-		double avgFCFSWaitTime=0;
+		
 		for(int i=0;i<numOfProcesses; i++) {
 		fcfsWaitTime.add(fcfsResponseTime.get(i)-arrivalTime.get(i));
 			avgFCFSWaitTime += fcfsWaitTime.get(i);
@@ -120,10 +121,41 @@ public class main {
 
 	
 
-// ******************* Round Robin Calculation ***************************
+// ******************* Round Robin Calculation ****************************************************
 		
-		// to measure how much of the process is left to run incroment down based on the burst time
+		// to measure how much of the process is left to run increment down based on the burst time
 		//Ask user quantum time
+		ArrayList<Integer> rrTurnaroundTime = new ArrayList<Integer>();
+		ArrayList<Integer> rrWaitTime = new ArrayList<Integer>();
+		ArrayList<Integer> rrResponseTime = new ArrayList<Integer>();
+		ArrayList<Integer> rrCompletionTime = new ArrayList<Integer>();
+		int quantumTime = 2;
+		double avgRRResponseTime=0;
+		double avgRRTurnaroundTime=0;
+		double avgRRWaitTime=0;
+		int[] burstTimeCopy = new int[numOfProcesses];
+		//making copy of burst times for calculation use
+		
+		for(int i=0;i< numOfProcesses; i++) {
+			burstTimeCopy[i] = burstTime.get(i);
+		}
+		
+		
+//Wait time & Completion Time 
+		
+// 
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+// ******************* Printing everything to console ************************************************		
 		
 System.out.println("-------------------------------------------------");
 System.out.println("            CPU Scheduling Simulation");
@@ -177,25 +209,35 @@ System.out.println("-------------------------------------------------");
 System.out.println("                  Round Robin");
 System.out.println("-------------------------------------------------");
 
-		/*
-		 * 
-		 * 
-		 * 
-		 * The simulator first reads task information from the input file and stores all data
-		 * in a data structure such as an ArrayList. Then it starts simulating one scheduling
-		 * algorithm in a time-driven manner. At each time unit (or slot), it adds any newly
-		 * arrived task(s) into the ready queue and calls a specific scheduler algorithm in
-		 * order to select appropriate tasks from the ready queue. When a task is chosen to 
-		 * run, the simulator prints out a message indicating what process ID is chosen to
-		 * execute for this time slot. If no task is running (i.e. empty ready queue), it 
-		 * prints out an “idle” message. Before advancing to the next time unit, the 
-		 * simulator should update all necessary changes in task and ready queue status.
-		
-		The program is run as follows:
+// Gantt Chart
 
-		java Driver fcfs schedule.txt
 
-		 */
+
+
+
+//Printing Turnaround Times
+System.out.println("");
+System.out.println("Turnaround times:");
+for(int i=0;i<numOfProcesses; i++) {
+	System.out.println(processID.get(i)+ " = " );
+}
+//Printing Wait times
+System.out.println("");
+System.out.println("Wait times:");
+for(int i=0;i<numOfProcesses; i++) {
+	System.out.println(processID.get(i)+ " = " );
+}
+//Printing Response times
+System.out.println("");
+System.out.println("Response times:");
+for(int i=0;i<numOfProcesses; i++) {
+	System.out.println(processID.get(i)+ " = ");
+}
+//Printing the Averages of turnaround, wait, and response times
+System.out.println("");
+System.out.println("Average turnaround time: ");
+System.out.println("Average wait time: ");
+System.out.println("Average response time: ");
 		
 	}
 }
