@@ -126,10 +126,10 @@ public class main {
 		// to measure how much of the process is left to run increment down based on the burst time
 		//Ask user quantum time
 		ArrayList<Integer> rrTurnaroundTime = new ArrayList<Integer>();
-		ArrayList<Integer> rrWaitTime = new ArrayList<Integer>();
+		int[] rrWaitTime = new int[numOfProcesses];
 		ArrayList<Integer> rrResponseTime = new ArrayList<Integer>();
 		ArrayList<Integer> rrCompletionTime = new ArrayList<Integer>();
-		int quantumTime = 2;
+		int quantumTime = 2; //MAKE THIS A SCANNER
 		double avgRRResponseTime=0;
 		double avgRRTurnaroundTime=0;
 		double avgRRWaitTime=0;
@@ -141,14 +141,45 @@ public class main {
 		}
 		
 		
-//Wait time & Completion Time 
+
+// implement the arrival time *********
 		
-// 
+		int timeOfProcess = 0; // current time
+// keep traversing through each process until they are all completed
+	while(true) {
+		boolean done = true;
+		
+		for(int i = 0; i<numOfProcesses; i++) {
+			
+			//check if the process still has burst time, if it does it needs to go to the ready queue
+			if(burstTimeCopy[i]>0) {
+				done = false; // process is waiting
+				
+				if(burstTimeCopy[i]>quantumTime) {
+					//increase time spent being processed and reduce the amount left on the process' burst time
+					timeOfProcess += quantumTime;
+					burstTimeCopy[i]-=quantumTime;
+				}else {// if bursttime is equal or smaller than the quantum time
+					timeOfProcess = timeOfProcess + burstTimeCopy[i];
+		
+					rrWaitTime[i]=timeOfProcess - burstTime.get(i);
+					
+					burstTimeCopy[i] = 0;
+					
+				}
+			}
+		}
+		if(done == true) {
+			break;
+		}
+	}
+		
+		for(int i = 0; i< numOfProcesses; i++) {
+			avgRRWaitTime+=rrWaitTime[i];
+		}
+		avgRRWaitTime = avgRRWaitTime/numOfProcesses;
 	
-		
-		
-		
-		
+
 		
 		
 		
@@ -225,7 +256,7 @@ for(int i=0;i<numOfProcesses; i++) {
 System.out.println("");
 System.out.println("Wait times:");
 for(int i=0;i<numOfProcesses; i++) {
-	System.out.println(processID.get(i)+ " = " );
+	System.out.println(processID.get(i)+ " = "+rrWaitTime[i] );
 }
 //Printing Response times
 System.out.println("");
@@ -236,7 +267,7 @@ for(int i=0;i<numOfProcesses; i++) {
 //Printing the Averages of turnaround, wait, and response times
 System.out.println("");
 System.out.println("Average turnaround time: ");
-System.out.println("Average wait time: ");
+System.out.println("Average wait time: " + avgRRWaitTime);
 System.out.println("Average response time: ");
 		
 	}
